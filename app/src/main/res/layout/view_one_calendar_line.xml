@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.sagrishin.ptsadm.common.uikit.calendar.DayOfMonthView
+        android:id="@+id/dayOfMonth1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/dayOfMonth2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:dayName="7"
+        tools:isDaySelected="false" />
+
+    <com.sagrishin.ptsadm.common.uikit.calendar.DayOfMonthView
+        android:id="@+id/dayOfMonth2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/dayOfMonth3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dayOfMonth1"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:countEvents="3"
+        tools:dayName="8" />
+
+    <com.sagrishin.ptsadm.common.uikit.calendar.DayOfMonthView
+        android:id="@+id/dayOfMonth3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/dayOfMonth4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dayOfMonth2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:dayName="9" />
+
+    <com.sagrishin.ptsadm.common.uikit.calendar.DayOfMonthView
+        android:id="@+id/dayOfMonth4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/dayOfMonth5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dayOfMonth3"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:dayName="9" />
+
+    <com.sagrishin.ptsadm.common.uikit.calendar.DayOfMonthView
+        android:id="@+id/dayOfMonth5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/dayOfMonth6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dayOfMonth4"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:countEvents="1"
+        tools:dayName="10" />
+
+    <com.sagrishin.ptsadm.common.uikit.calendar.DayOfMonthView
+        android:id="@+id/dayOfMonth6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/dayOfMonth7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dayOfMonth5"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:dayName="11" />
+
+    <com.sagrishin.ptsadm.common.uikit.calendar.DayOfMonthView
+        android:id="@+id/dayOfMonth7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dayOfMonth6"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:countEvents="2"
+        tools:dayName="12" />
+</androidx.constraintlayout.widget.ConstraintLayout>

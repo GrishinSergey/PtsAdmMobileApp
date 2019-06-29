@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="day1">Пн</string>
+    <string name="day2">Вт</string>
+    <string name="day3">Ср</string>
+    <string name="day4">Чт</string>
+    <string name="day5">Пт</string>
+    <string name="day6">Сб</string>
+    <string name="day7">Вс</string>
+
+    <plurals name="countEvents">
+        <item quantity="one">%1$d пациент</item>
+        <item quantity="few">%1$d пациента</item>
+        <item quantity="many">%1$d пациентов</item>
+    </plurals>
+    <string name="enter_email">Введите email</string>
+    <string name="enter_password">Введите пароль</string>
+    <string name="new_appointment_patient_data_hint">Начните вводить имя или номер телефона</string>
+    <string name="new_appointment_title">Новая запись</string>
+    <string name="not_have_an_account">Нет аккаунта?</string>
+    <string name="register">Регистрация</string>
+    <string name="set_visit_datetime_hint">Дата посещения</string>
+    <string name="login">Войти</string>
+    <string name="delete_appointment_dialog_title">Удалить запись</string>
+    <string name="delete_appointment_dialog_message">Вы уверены, что хотите удалить запись?</string>
+    <string name="no">Нет</string>
+    <string name="select_patient">Выбрать пациента</string>
+    <string name="yes">Да</string>
+    <string name="call_dialog_message">Позвонить %1$s (%2$s)?</string>
+    <string name="call_to_patient_dialog_title">Позвонить?</string>
+    <string name="check_internet_dialog_message">Проверьте интернет-соединение и попробуйте снова</string>
+    <string name="retry">Еще раз</string>
+    <string name="offline_dialog_title">Нет доступа к сети</string>
+    <string name="delete_patient_dialog_title">Удалить пациента?</string>
+    <string name="delete_patient_dialog_message">Это действие удалит пациента %1$s и всю историю посещений (Это действие нельзя отменить)</string>
+</resources>

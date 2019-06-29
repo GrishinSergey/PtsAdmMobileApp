@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/common"
+    app:startDestination="@id/appointments">
+
+    <fragment
+        android:id="@+id/appointments"
+        android:name="com.sagrishin.ptsadm.appointments.AppointmentsCalendarFragment"
+        android:label="month"
+        tools:layout="@layout/fragment_appointments_calendar">
+
+        <action
+            android:id="@+id/action_month_next"
+            app:destination="@id/appointments"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left" />
+
+        <action
+            android:id="@+id/action_month_prev"
+            app:destination="@id/appointments"
+            app:enterAnim="@anim/enter_from_left"
+            app:exitAnim="@anim/exit_to_right" />
+
+        <argument
+            android:name="dayInMonth"
+            android:defaultValue="@null"
+            app:argType="org.joda.time.DateTime"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/patients"
+        android:name="com.sagrishin.ptsadm.patients.views.PatientsFragment"
+        android:label="month"
+        tools:layout="@layout/fragment_patients" />
+</navigation>

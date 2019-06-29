@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <declare-styleable name="AssignedView">
+        <attr name="isEditable" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DayOfMonthView">
+        <attr name="countEvents" format="integer" />
+        <attr name="isDaySelected" format="boolean" />
+        <attr name="dayName" format="string" />
+        <attr name="s" format="reference" />
+    </declare-styleable>
+</resources>
