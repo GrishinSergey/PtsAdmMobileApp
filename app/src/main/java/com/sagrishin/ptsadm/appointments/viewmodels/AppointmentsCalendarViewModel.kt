@@ -3,6 +3,7 @@ package com.sagrishin.ptsadm.appointments.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import com.sagrishin.ptsadm.appointments.UiAppointment
 import com.sagrishin.ptsadm.appointments.UiMonthData
 import com.sagrishin.ptsadm.appointments.usecases.CalendarEventsUseCase
 import com.sagrishin.ptsadm.common.firstDayOfMonth
@@ -29,6 +30,7 @@ class AppointmentsCalendarViewModel(
             )
         } as MediatorLiveData<UiMonthData>
     }
+    val patientAppointmentsLiveData = MediatorLiveData<List<UiAppointment>>()
 
     override fun onCleared() {
         calendarEventsUseCase.clearSubscriptions()
@@ -43,6 +45,12 @@ class AppointmentsCalendarViewModel(
     fun loadEventsForDay(day: DateTime) {
         dayEvents.addSource(findDayWithEventsBy(day)) {
             dayEvents.value = it.events.toMutableList()
+        }
+    }
+
+    fun loadAppointmentsBy(patientId: Long) {
+        patientAppointmentsLiveData.addSource(calendarEventsUseCase.getAppointmentsBy(patientId)) {
+            patientAppointmentsLiveData.value = it.sortedByDescending { it.dateTime }
         }
     }
 

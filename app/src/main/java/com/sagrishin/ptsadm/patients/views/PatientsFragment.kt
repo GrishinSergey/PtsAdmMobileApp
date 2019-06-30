@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-import com.sagrishin.ptsadm.AuthActivity
 import com.sagrishin.ptsadm.MainActivity
 import com.sagrishin.ptsadm.R
+import com.sagrishin.ptsadm.appointments.views.PatientAppointmentsLogDialog
 import com.sagrishin.ptsadm.common.adapter.BaseRecyclerAdapter
 import com.sagrishin.ptsadm.common.addOnBackPressedCallback
 import com.sagrishin.ptsadm.common.livedata.observe
@@ -27,7 +25,7 @@ class PatientsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        patientsViewModel.loadPatients()
+        patientsViewModel.loadRemotePatients()
 
         activity?.addOnBackPressedCallback(this) {
             if (expandableFilter.isExpanded) {
@@ -57,28 +55,37 @@ class PatientsFragment : Fragment() {
             patientsViewModel.filterPatientsBy(text.toString())
         }
 
-        fab.setOnClickListener {
-
-        }
-
-        patients.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((dy > 0) && (fab.visibility == View.VISIBLE)) {
-                    fab.hide()
-                } else {
-                    fab.show()
-                }
-            }
-        })
+        /**
+         * For now this part is not used. New patients can be added only from phone's contacts book
+         */
+//        fab.setOnClickListener {
+//
+//        }
+//
+//        patients.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                if ((dy > 0) && (fab.visibility == View.VISIBLE)) {
+//                    fab.hide()
+//                } else {
+//                    fab.show()
+//                }
+//            }
+//        })
 
         patientsViewModel.shownPatientsLiveData.observe(this) {
             if (patients.adapter == null) {
-                patients.adapter = BaseRecyclerAdapter(it.toMutableList()).apply {
+                patients.adapter = BaseRecyclerAdapter(it.toMutableList(), this::onPatientClickListener).apply {
                     this += PatientHolder.getHolderDefinition(::onDeletePatient)
                 }
             } else {
                 (patients.adapter as BaseRecyclerAdapter<UiPatient>).setItems(it)
             }
+        }
+    }
+
+    private fun onPatientClickListener(patient: UiPatient) {
+        PatientAppointmentsLogDialog.newInstance(patient.id).apply {
+            this.show(this@PatientsFragment.childFragmentManager, "PatientAppointmentsLogDialog")
         }
     }
 

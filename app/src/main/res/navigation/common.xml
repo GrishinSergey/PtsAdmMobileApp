@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/appointments"
-        android:name="com.sagrishin.ptsadm.appointments.AppointmentsCalendarFragment"
+        android:name="com.sagrishin.ptsadm.appointments.views.AppointmentsCalendarFragment"
         android:label="month"
         tools:layout="@layout/fragment_appointments_calendar">
 

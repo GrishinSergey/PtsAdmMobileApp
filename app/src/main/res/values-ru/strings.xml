@@ -33,4 +33,6 @@
     <string name="offline_dialog_title">Нет доступа к сети</string>
     <string name="delete_patient_dialog_title">Удалить пациента?</string>
     <string name="delete_patient_dialog_message">Это действие удалит пациента %1$s и всю историю посещений (Это действие нельзя отменить)</string>
+    <string name="no_appointments_text">Нет посещений</string>
+    <string name="appointments_log">История посещений</string>
 </resources>
