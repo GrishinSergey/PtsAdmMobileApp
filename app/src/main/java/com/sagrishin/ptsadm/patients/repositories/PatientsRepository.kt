@@ -12,4 +12,5 @@ interface PatientsRepository {
 
     fun deleteBy(id: Long): Single<Boolean>
 
+    fun getLocalPatientsFromPhoneBook(): Single<List<ApiPatient>>
 }

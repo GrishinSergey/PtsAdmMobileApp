@@ -3,10 +3,7 @@ package com.sagrishin.ptsadm.patients.views
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
-import com.afollestad.assent.Permission
-import com.afollestad.assent.runWithPermissions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sagrishin.ptsadm.R
 import com.sagrishin.ptsadm.common.adapter.BaseRecyclerAdapter
@@ -14,7 +11,9 @@ import com.sagrishin.ptsadm.common.livedata.observe
 import com.sagrishin.ptsadm.patients.UiPatient
 import com.sagrishin.ptsadm.patients.holders.PatientHolder
 import com.sagrishin.ptsadm.patients.viewmodels.PatientsViewModel
+import kotlinx.android.synthetic.main.dialog_patient_appointments_log.view.*
 import kotlinx.android.synthetic.main.dialog_select_patients.view.*
+import kotlinx.android.synthetic.main.dialog_select_patients.view.toolbar
 import org.koin.android.ext.android.inject
 
 class SelectPatientsDialog : BottomSheetDialogFragment() {
@@ -30,7 +29,7 @@ class SelectPatientsDialog : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        patientsViewModel.loadPatients()
+        patientsViewModel.loadAllPatients()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -54,6 +53,8 @@ class SelectPatientsDialog : BottomSheetDialogFragment() {
             patientFilterText.doOnTextChanged { text, _, _, _ ->
                 patientsViewModel.filterPatientsBy(text.toString())
             }
+
+            toolbar.setNavigationOnClickListener { dialog.dismiss() }
 
             patientsViewModel.shownPatientsLiveData.observe(this@SelectPatientsDialog) {
                 if (patients.adapter == null) {

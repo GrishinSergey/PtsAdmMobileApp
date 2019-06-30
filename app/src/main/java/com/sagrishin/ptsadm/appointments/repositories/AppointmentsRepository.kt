@@ -15,4 +15,6 @@ interface AppointmentsRepository {
 
     fun deleteAppointmentBy(appointmentId: Long): Single<Boolean>
 
+    fun getAppointmentsBy(patientId: Long): Single<List<ApiAppointment>>
+
 }

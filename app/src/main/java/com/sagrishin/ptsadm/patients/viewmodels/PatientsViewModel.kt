@@ -1,5 +1,6 @@
 package com.sagrishin.ptsadm.patients.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,11 +19,12 @@ class PatientsViewModel(
         patientsUseCase.clearSubscriptions()
     }
 
-    fun loadPatients() {
-        shownPatientsLiveData.addSource(patientsUseCase.getPatients()) {
-            allPatientsLiveData.value = it
-            shownPatientsLiveData.value = it
-        }
+    fun loadRemotePatients() {
+        observePatients(patientsUseCase.getRemotePatients())
+    }
+
+    fun loadAllPatients() {
+        observePatients(patientsUseCase.getAllPatients())
     }
 
     fun filterPatientsBy(filterText: String) {
@@ -43,6 +45,13 @@ class PatientsViewModel(
 
     fun resetShownPatients() {
         shownPatientsLiveData.value = allPatientsLiveData.value
+    }
+
+    private fun observePatients(source: LiveData<List<UiPatient>>) {
+        shownPatientsLiveData.addSource(source) {
+            allPatientsLiveData.value = it
+            shownPatientsLiveData.value = it
+        }
     }
 
     private fun UiPatient.isPatientMatchTo(text: String): Boolean {

@@ -18,9 +18,6 @@ class PatientsRepositoryImpl(
 
     override fun getAll(): Single<List<ApiPatient>> {
         return callSingle { patientsApiService.getAllByCurrentDoctor() }
-            .zipWith(getLocalPatientInPhoneBook(), BiFunction { t1, t2 ->
-                (t1 + t2).distinctBy { it.phoneNumber }.sortedBy { (it.name + it.surname).trim() }
-            })
     }
 
     override fun savePatient(apiPatient: ApiPatient): Single<ApiPatient> {
@@ -31,7 +28,7 @@ class PatientsRepositoryImpl(
         return callSingle { patientsApiService.deleteBy(id) }
     }
 
-    private fun getLocalPatientInPhoneBook(): Single<List<ApiPatient>> {
+    override fun getLocalPatientsFromPhoneBook(): Single<List<ApiPatient>> {
         return RxContacts.fetch(context)
             .observeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())

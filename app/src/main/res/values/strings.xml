@@ -48,4 +48,7 @@
     <string name="delete_patient_dialog_title">Delete patient?</string>
     <string name="delete_patient_dialog_message">This action will remove patient %1$s with all appointments (It can\'t be canceled).</string>
 
+    <string name="appointments_log">Appointments log</string>
+    <string name="no_appointments_text">No appointments found for this patient</string>
+
 </resources>

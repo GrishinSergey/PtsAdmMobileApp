@@ -24,10 +24,14 @@ interface AppointmentsApiService {
         @Body apiAppointment: ApiAppointment
     ): Single<Response<ApiAppointment>>
 
-
     @DELETE("/appointments/deleteAppointmentBy/{id}")
     fun deleteAppointmentBy(
         @Path("id") appointmentId: Long
     ): Single<Response<Boolean>>
+
+    @GET("/appointments/findByPatient/{patientId}")
+    fun getAppointmentsBy(
+        @Path("patientId") patientId: Long
+    ): Single<Response<List<ApiAppointment>>>
 
 }

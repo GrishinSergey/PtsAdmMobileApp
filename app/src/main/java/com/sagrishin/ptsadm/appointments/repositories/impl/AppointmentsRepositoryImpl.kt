@@ -26,4 +26,8 @@ class AppointmentsRepositoryImpl(
         return callSingle { apiService.deleteAppointmentBy(appointmentId) }
     }
 
+    override fun getAppointmentsBy(patientId: Long): Single<List<ApiAppointment>> {
+        return callSingle { apiService.getAppointmentsBy(patientId) }
+    }
+
 }

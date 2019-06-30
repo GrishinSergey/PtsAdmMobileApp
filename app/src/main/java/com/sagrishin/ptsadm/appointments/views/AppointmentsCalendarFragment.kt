@@ -1,4 +1,4 @@
-package com.sagrishin.ptsadm.appointments
+package com.sagrishin.ptsadm.appointments.views
 
 import android.content.Intent
 import android.net.Uri
@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import com.sagrishin.ptsadm.MainActivity
 import com.sagrishin.ptsadm.R
-import com.sagrishin.ptsadm.appointments.AppointmentsCalendarFragmentDirections.Companion.actionMonthNext
-import com.sagrishin.ptsadm.appointments.AppointmentsCalendarFragmentDirections.Companion.actionMonthPrev
+import com.sagrishin.ptsadm.appointments.UiMonthData
 import com.sagrishin.ptsadm.appointments.viewmodels.AppointmentsCalendarViewModel
+import com.sagrishin.ptsadm.appointments.views.AppointmentsCalendarFragmentDirections.Companion.actionMonthNext
+import com.sagrishin.ptsadm.appointments.views.AppointmentsCalendarFragmentDirections.Companion.actionMonthPrev
 import com.sagrishin.ptsadm.common.*
 import com.sagrishin.ptsadm.common.glide.loadBackgroundFrom
 import com.sagrishin.ptsadm.common.livedata.observe

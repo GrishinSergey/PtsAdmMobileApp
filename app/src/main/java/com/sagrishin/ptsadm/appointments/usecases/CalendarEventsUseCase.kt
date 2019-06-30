@@ -1,6 +1,7 @@
 package com.sagrishin.ptsadm.appointments.usecases
 
 import androidx.lifecycle.LiveData
+import com.sagrishin.ptsadm.appointments.UiAppointment
 import com.sagrishin.ptsadm.appointments.UiMonthData
 import com.sagrishin.ptsadm.appointments.repositories.AppointmentsRepository
 import com.sagrishin.ptsadm.common.api.*
@@ -62,6 +63,18 @@ class CalendarEventsUseCase(
             result.value = false
         }.doOnSuccess {
             result.value = it
+        }.subscribe()
+
+        return result
+    }
+
+    fun getAppointmentsBy(patientId: Long): LiveData<List<UiAppointment>> {
+        val result = mutableLiveDataOf<List<UiAppointment>>()
+
+        compositeDisposable += appointmentsRepository.getAppointmentsBy(patientId).doOnError {
+            result.value = emptyList()
+        }.doOnSuccess {
+            result.value = it.map { it.toUiModel() }
         }.subscribe()
 
         return result
