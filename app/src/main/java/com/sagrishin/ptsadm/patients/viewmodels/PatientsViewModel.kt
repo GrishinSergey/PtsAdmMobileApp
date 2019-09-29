@@ -7,50 +7,60 @@ import androidx.lifecycle.ViewModel
 import com.sagrishin.ptsadm.common.livedata.let
 import com.sagrishin.ptsadm.patients.UiPatient
 import com.sagrishin.ptsadm.patients.usecases.PatientsUseCase
+import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 
-class PatientsViewModel(
-    private val patientsUseCase: PatientsUseCase
-) : ViewModel() {
+class PatientsViewModel(private val patientsUseCase: PatientsUseCase) : ViewModel() {
 
-    val shownPatientsLiveData = MediatorLiveData<List<UiPatient>>()
+    val shownPatientsLiveData: LiveData<List<UiPatient>>
+        get() = _shownPatientsLiveData
+    private val _shownPatientsLiveData = MediatorLiveData<List<UiPatient>>()
     private val allPatientsLiveData = MutableLiveData<List<UiPatient>>()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCleared() {
-        patientsUseCase.clearSubscriptions()
+        compositeDisposable.clear()
     }
 
     fun loadRemotePatients() {
-        observePatients(patientsUseCase.getRemotePatients())
+        compositeDisposable += patientsUseCase.getRemotePatients().doOnSuccess().doOnError {
+
+        }.subscribe()
     }
 
     fun loadAllPatients() {
-        observePatients(patientsUseCase.getAllPatients())
+        compositeDisposable += patientsUseCase.getAllPatients().doOnSuccess().doOnError {
+
+        }.subscribe()
     }
 
     fun filterPatientsBy(filterText: String) {
-        shownPatientsLiveData.addSource(allPatientsLiveData.let { it.filter { it.isPatientMatchTo(filterText) } }) {
-            shownPatientsLiveData.value = it
+        _shownPatientsLiveData.addSource(allPatientsLiveData.let { it.filter { it.isPatientMatchTo(filterText) } }) {
+            _shownPatientsLiveData.value = it
         }
     }
 
     fun deletePatient(patient: UiPatient) {
-        shownPatientsLiveData.addSource(patientsUseCase.deletePatientBy(patient.id)) {
+        compositeDisposable += patientsUseCase.deletePatientBy(patient.id).doOnComplete {
             allPatientsLiveData.value!!.toMutableList().apply {
                 removeIf { it.id == patient.id }
                 allPatientsLiveData.value = this
-                shownPatientsLiveData.value = this
+                _shownPatientsLiveData.value = this
             }
-        }
+        }.doOnError {
+
+        }.subscribe()
     }
 
     fun resetShownPatients() {
-        shownPatientsLiveData.value = allPatientsLiveData.value
+        _shownPatientsLiveData.value = allPatientsLiveData.value
     }
 
-    private fun observePatients(source: LiveData<List<UiPatient>>) {
-        shownPatientsLiveData.addSource(source) {
+    private fun Single<List<UiPatient>>.doOnSuccess(): Single<List<UiPatient>> {
+        return doOnSuccess {
             allPatientsLiveData.value = it
-            shownPatientsLiveData.value = it
+            _shownPatientsLiveData.value = it
         }
     }
 

@@ -13,6 +13,7 @@
         <item quantity="few">%1$d пациента</item>
         <item quantity="many">%1$d пациентов</item>
     </plurals>
+    <string name="error_token_expired">Сессия истекла. Необходим повторный вход</string>
     <string name="enter_email">Введите email</string>
     <string name="enter_password">Введите пароль</string>
     <string name="new_appointment_patient_data_hint">Начните вводить имя или номер телефона</string>
@@ -35,4 +36,8 @@
     <string name="delete_patient_dialog_message">Это действие удалит пациента %1$s и всю историю посещений (Это действие нельзя отменить)</string>
     <string name="no_appointments_text">Нет посещений</string>
     <string name="appointments_log">История посещений</string>
+    <string name="already_have_an_account">Есть аккаунт?</string>
+    <string name="confirm_password">Подтвердить пароль</string>
+    <string name="error_login_required">Логин — обязательное поле</string>
+    <string name="error_password_required">"Пароль — обязательное поле "</string>
 </resources>

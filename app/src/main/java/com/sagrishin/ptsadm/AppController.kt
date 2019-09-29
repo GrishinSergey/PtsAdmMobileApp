@@ -2,9 +2,10 @@ package com.sagrishin.ptsadm
 
 import android.app.Application
 import android.util.Log
+import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
 import com.sagrishin.ptsadm.di.*
-import com.snakydesign.watchtower.WatchTower
-import com.snakydesign.watchtower.interceptor.WebWatchTowerObserver
+import io.fabric.sdk.android.Fabric
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import net.danlew.android.joda.JodaTimeAndroid
@@ -26,10 +27,9 @@ class AppController : Application() {
                 appointmentsModule,
                 authModule,
                 patientsModule
-            ).androidContext(applicationContext)
+            )
+            androidContext(applicationContext)
         }
-
-        WatchTower.start(WebWatchTowerObserver(port = 8085))
 
         RxJavaPlugins.setErrorHandler {
             val e = if (it is UndeliverableException) it.cause!! else it
@@ -51,6 +51,9 @@ class AppController : Application() {
             Log.e("RxJava", e.message, e)
         }
 
+        Fabric.with(this, Crashlytics.Builder()
+            .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+            .build())
     }
 
 }

@@ -1,11 +1,7 @@
 package com.sagrishin.ptsadm.common.livedata
 
 import androidx.arch.core.util.Function
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import androidx.lifecycle.Transformations.switchMap
 
 fun <T> LiveData<T>.toMutableLiveData(): MutableLiveData<T> = MutableLiveData(value!!)
@@ -26,6 +22,10 @@ fun <T, F> LiveData<T>.flatMap(mapper: (T) -> LiveData<F>): LiveData<F> {
 
 fun <T, F> LiveData<T>.let(mapper: (T) -> F): LiveData<F> {
     return Transformations.map(this, mapper)
+}
+
+fun <T, F> MutableLiveData<T>.let(mapper: (T) -> F): MutableLiveData<F> {
+    return Transformations.map(this, mapper) as MutableLiveData<F>
 }
 
 fun <T> LiveData<List<T>>.filter(predicate: (T) -> Boolean): LiveData<List<T>> {

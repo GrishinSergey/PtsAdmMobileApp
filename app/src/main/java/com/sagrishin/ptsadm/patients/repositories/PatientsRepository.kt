@@ -1,8 +1,8 @@
 package com.sagrishin.ptsadm.patients.repositories
 
 import com.sagrishin.ptsadm.common.api.ApiPatient
+import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 
 interface PatientsRepository {
 
@@ -10,7 +10,7 @@ interface PatientsRepository {
 
     fun savePatient(apiPatient: ApiPatient): Single<ApiPatient>
 
-    fun deleteBy(id: Long): Single<Boolean>
+    fun deleteBy(id: Long): Completable
 
     fun getLocalPatientsFromPhoneBook(): Single<List<ApiPatient>>
 }

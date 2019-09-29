@@ -103,19 +103,20 @@ class HolderDefinition<T> {
     lateinit var predicate: HolderPredicate<T>
     lateinit var generator: HolderGenerator<T>
 
-    constructor()
-
-    constructor(viewType: Int, predicate: HolderPredicate<T>, generator: HolderGenerator<T>) {
-        this.viewType = viewType
-        this.predicate = predicate
-        this.generator = generator
-    }
-
 }
 
 
 fun <T> holder(block: HolderDefinition<T>.() -> Unit): HolderDefinition<T> {
     return HolderDefinition<T>().apply(block)
+}
+
+
+fun <T> holder1(generator: HolderGenerator<T>): HolderDefinition<T> {
+    return holder {
+        this.viewType = -1
+        this.predicate = { true }
+        this.generator = generator
+    }
 }
 
 

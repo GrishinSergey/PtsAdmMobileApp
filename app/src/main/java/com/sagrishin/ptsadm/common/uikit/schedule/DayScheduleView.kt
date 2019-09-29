@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.view.plusAssign
-import com.sagrishin.ptsadm.appointments.UiAppointment
 import com.sagrishin.ptsadm.patients.UiPatient
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -24,25 +23,19 @@ class DayScheduleView @JvmOverloads constructor(
     }
 
     var onAddAppointmentListener: (DateTime) -> Unit by observable({ _ -> }) { _, _, _ ->
-        children.forEach {
-            (it as DayScheduleHourItem).onAddAppointmentListener = onAddAppointmentListener
-        }
+        children.forEach { (it as DayScheduleHourItem).onAddAppointmentListener = onAddAppointmentListener }
     }
     var onDeleteAppointmentListener: (Long, DateTime) -> Unit by observable({ _, _ -> }) { _, _, _ ->
-        children.forEach {
-            (it as DayScheduleHourItem).onDeleteAppointmentListener = onDeleteAppointmentListener
-        }
+        children.forEach { (it as DayScheduleHourItem).onDeleteAppointmentListener = onDeleteAppointmentListener }
     }
     var onAppointmentActionListener: (UiPatient) -> Unit by observable({_ -> }) { _, _, _ ->
-        children.forEach {
-            (it as DayScheduleHourItem).onAppointmentActionListener = onAppointmentActionListener
-        }
+        children.forEach { (it as DayScheduleHourItem).onAppointmentActionListener = onAppointmentActionListener }
     }
     private val formatter = DateTimeFormat.forPattern("HH:mm")
 
     init {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        orientation = LinearLayout.VERTICAL
+        orientation = VERTICAL
 
         val dayRange = MORNING_HOUR_NUMBER..EVENING_HOUR_NUMBER
         val hours = dayRange.map { "%02d:00".format(it) }

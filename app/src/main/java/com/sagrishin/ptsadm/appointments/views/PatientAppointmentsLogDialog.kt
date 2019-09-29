@@ -4,39 +4,31 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sagrishin.ptsadm.R
 import com.sagrishin.ptsadm.appointments.UiAppointment
 import com.sagrishin.ptsadm.appointments.viewmodels.AppointmentsCalendarViewModel
 import com.sagrishin.ptsadm.common.adapter.*
 import com.sagrishin.ptsadm.common.livedata.observe
-import com.sagrishin.ptsadm.patients.UiPatient
 import kotlinx.android.synthetic.main.dialog_patient_appointments_log.view.*
 import kotlinx.android.synthetic.main.item_appointment.view.*
 import org.joda.time.format.DateTimeFormat
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PatientAppointmentsLogDialog : BottomSheetDialogFragment() {
 
-    private val appointmentsViewModel: AppointmentsCalendarViewModel by inject()
-    private var patientId: Long? = null
-
-    companion object {
-        fun newInstance(patientId: Long): PatientAppointmentsLogDialog {
-            return PatientAppointmentsLogDialog().apply {
-                this.patientId = patientId
-            }
-        }
-    }
+    private val appointmentsViewModel: AppointmentsCalendarViewModel by viewModel()
+    private val args: PatientAppointmentsLogDialogArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appointmentsViewModel.loadAppointmentsBy(patientId!!)
+        appointmentsViewModel.loadAppointmentsBy(args.patientId)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dialog?.window?.attributes?.windowAnimations = R.style.DialogAppearance
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAppearance
     }
 
     override fun setupDialog(dialog: Dialog, style: Int) {
@@ -68,11 +60,7 @@ class PatientAppointmentsLogDialog : BottomSheetDialogFragment() {
             private val dayFormatter = DateTimeFormat.forPattern("dd-MM-YYYY")
 
             fun getHolderDefinition(): HolderDefinition<UiAppointment> {
-                return holder {
-                    viewType = 1
-                    predicate = { true }
-                    generator = { AppointmentHolder(it.inflate(R.layout.item_appointment)) }
-                }
+                return holder1 { AppointmentHolder(it.inflate(R.layout.item_appointment)) }
             }
         }
 

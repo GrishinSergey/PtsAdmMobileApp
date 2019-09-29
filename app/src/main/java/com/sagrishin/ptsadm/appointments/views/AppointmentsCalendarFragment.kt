@@ -3,11 +3,11 @@ package com.sagrishin.ptsadm.appointments.views
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import com.sagrishin.ptsadm.MainActivity
 import com.sagrishin.ptsadm.R
 import com.sagrishin.ptsadm.appointments.UiMonthData
@@ -19,18 +19,22 @@ import com.sagrishin.ptsadm.common.glide.loadBackgroundFrom
 import com.sagrishin.ptsadm.common.livedata.observe
 import com.sagrishin.ptsadm.common.uikit.alertdialog.alert
 import com.sagrishin.ptsadm.common.uikit.calendar.UiDayWithEvents
+import com.sagrishin.ptsadm.common.uikit.snackbar.snackbar
 import com.sagrishin.ptsadm.patients.UiPatient
 import com.sagrishin.ptsadm.patients.views.SelectPatientsDialog
 import kotlinx.android.synthetic.main.fragment_appointments_calendar.*
 import kotlinx.android.synthetic.main.view_day_with_events_badge.*
 import org.joda.time.DateTime
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.abs
 
-class AppointmentsCalendarFragment : Fragment() {
+class AppointmentsCalendarFragment : Fragment(R.layout.fragment_appointments_calendar) {
 
     private val appointmentsViewModel: AppointmentsCalendarViewModel by viewModel()
     private var isToolbarVisible = true
     private var isCalendarControllerVisible = false
+
+    private val args: AppointmentsCalendarFragmentArgs by navArgs()
 
     private lateinit var selectedDate: DateTime
     private lateinit var dayInMonth: DateTime
@@ -47,39 +51,47 @@ class AppointmentsCalendarFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_appointments_calendar, container, false)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        appointmentsViewModel.monthData.observe(viewLifecycleOwner, ::onMonthDataReceived)
+        appointmentsViewModel.dayEvents.observe(viewLifecycleOwner, schedule::setEvents)
+        appointmentsViewModel.errorLiveData.observe(viewLifecycleOwner, ::showError)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         toolbar.animateAlpha(20, View.INVISIBLE)
-        dayInMonth = getPassedParameter()
+        dayInMonth = args.dayInMonth ?: currentDayDateTime
         appointmentsViewModel.loadMonthEvents(dayInMonth)
         appBar.loadBackgroundFrom(getToolbarBackgroundResourceId(dayInMonth.monthOfYear))
         monthName.text = dayInMonth.monthOfYear().asText.capitalize()
         bindAppbarWith(dayInMonth)
-        calendar.onDaySelectListener = this::onDaySelectListener
-        calendar.showMonthFor(dayInMonth)
-        schedule.onAddAppointmentListener = this::onAddAppointment
-        schedule.onDeleteAppointmentListener = this::onDeleteAppointment
-        schedule.onAppointmentActionListener = this::onAppointmentActionListener
+        calendar.apply {
+            onDaySelectListener = ::onDaySelectListener
+            showMonthFor(dayInMonth)
+        }
+        schedule.apply {
+            onAddAppointmentListener = ::onAddAppointment
+            onDeleteAppointmentListener = ::onDeleteAppointment
+            onAppointmentActionListener = ::onAppointmentActionListener
+        }
         appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, offset ->
             onAppBarScrollOffsetChangeListener(offset)
         })
         prevMonth.setOnClickListener { onShowPrevMonth(dayInMonth) }
         nextMonth.setOnClickListener { onShowNextMonth(dayInMonth) }
-        appointmentsViewModel.monthData.observe(viewLifecycleOwner, this::onMonthDataReceived)
-        appointmentsViewModel.dayEvents.observe(viewLifecycleOwner, schedule::setEvents)
     }
 
-    private fun getPassedParameter(): DateTime = arguments?.let {
-        AppointmentsCalendarFragmentArgs.fromBundle(it).dayInMonth
-    } ?: let {
-        currentDayDateTime
+    private fun showError(text: String) {
+        snackbar {
+            view = this@AppointmentsCalendarFragment.view!!
+            message = text
+            duration = Snackbar.LENGTH_LONG
+        }
     }
 
     private fun onAppBarScrollOffsetChangeListener(offset: Int) {
-        val percentage = Math.abs(offset).toFloat() / appBar.totalScrollRange.toFloat()
+        val percentage = abs(offset).toFloat() / appBar.totalScrollRange.toFloat()
 
         if (percentage <= 0.9F) {
             if (isToolbarVisible) {
@@ -149,14 +161,13 @@ class AppointmentsCalendarFragment : Fragment() {
         selectedDate = dayWithEvents.day
     }
 
-    private fun onAddAppointment(selectedHourWithMinutes: DateTime) {
-        SelectPatientsDialog.newInstance().apply {
-            onPatientSelectListener = { uiPatient ->
-                val dateTime = selectedDate.plusHours(selectedHourWithMinutes.hourOfDay)
-                    .plusMinutes(selectedHourWithMinutes.minuteOfHour)
+    private fun onAddAppointment(selectedTime: DateTime) {
+        show {
+            SelectPatientsDialog.newInstance { uiPatient ->
+                val dateTime = selectedDate.plusHours(selectedTime.hourOfDay).plusMinutes(selectedTime.minuteOfHour)
                 appointmentsViewModel.saveNewAppointment(uiPatient, dateTime)
             }
-        }.show(fragmentManager!!, SelectPatientsDialog::class.java.canonicalName)
+        }
     }
 
     private fun onDeleteAppointment(id: Long, dateTime: DateTime) {

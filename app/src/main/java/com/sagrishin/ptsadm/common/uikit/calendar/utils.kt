@@ -1,9 +1,7 @@
 package com.sagrishin.ptsadm.common.uikit.calendar
 
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
-import java.util.*
 
 internal inline fun <R> ClosedRange<DateTime>.mapDateTimes(
     step: DateTime.() -> DateTime = { this.plusDays(1) },
@@ -19,7 +17,7 @@ internal inline fun <R> ClosedRange<DateTime>.mapDateTimes(
     return res
 }
 
-internal inline fun <R> ClosedRange<LocalDate>.mapLocalDays(
+internal inline fun <R> ClosedRange<LocalDate>.mapLocalDates(
     step: LocalDate.() -> LocalDate = { this.plusDays(1) },
     action: (LocalDate) -> R
 ): List<R> {

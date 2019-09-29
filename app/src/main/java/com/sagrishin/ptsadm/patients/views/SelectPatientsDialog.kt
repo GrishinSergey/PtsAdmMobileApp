@@ -11,19 +11,17 @@ import com.sagrishin.ptsadm.common.livedata.observe
 import com.sagrishin.ptsadm.patients.UiPatient
 import com.sagrishin.ptsadm.patients.holders.PatientHolder
 import com.sagrishin.ptsadm.patients.viewmodels.PatientsViewModel
-import kotlinx.android.synthetic.main.dialog_patient_appointments_log.view.*
 import kotlinx.android.synthetic.main.dialog_select_patients.view.*
-import kotlinx.android.synthetic.main.dialog_select_patients.view.toolbar
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SelectPatientsDialog : BottomSheetDialogFragment() {
 
-    private val patientsViewModel: PatientsViewModel by inject()
-    lateinit var onPatientSelectListener: (UiPatient) -> Unit
+    lateinit var onSelectListener: (UiPatient) -> Unit
+    private val patientsViewModel: PatientsViewModel by viewModel()
 
     companion object {
-        fun newInstance(): SelectPatientsDialog {
-            return SelectPatientsDialog()
+        fun newInstance(onSelectListener: (UiPatient) -> Unit): SelectPatientsDialog {
+            return SelectPatientsDialog().apply { this.onSelectListener = onSelectListener }
         }
     }
 
@@ -34,7 +32,7 @@ class SelectPatientsDialog : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dialog?.window?.attributes?.windowAnimations = R.style.DialogAppearance
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAppearance
     }
 
     override fun setupDialog(dialog: Dialog, style: Int) {
@@ -58,7 +56,10 @@ class SelectPatientsDialog : BottomSheetDialogFragment() {
 
             patientsViewModel.shownPatientsLiveData.observe(this@SelectPatientsDialog) {
                 if (patients.adapter == null) {
-                    patients.adapter = BaseRecyclerAdapter(it.toMutableList(), ::onPatientSelectListener).apply {
+                    patients.adapter = BaseRecyclerAdapter(it.toMutableList()) { uiPatient ->
+                        onSelectListener(uiPatient)
+                        dismiss()
+                    }.apply {
                         this += PatientHolder.getHolderDefinition()
                     }
                 } else {
@@ -66,11 +67,6 @@ class SelectPatientsDialog : BottomSheetDialogFragment() {
                 }
             }
         }
-    }
-
-    private fun onPatientSelectListener(it: UiPatient) {
-        this.onPatientSelectListener.invoke(it)
-        dismiss()
     }
 
 }

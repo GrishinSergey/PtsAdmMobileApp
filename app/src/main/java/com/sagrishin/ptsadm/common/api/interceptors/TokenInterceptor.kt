@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class TokenInterceptor constructor(
+class TokenInterceptor(
     private val sharedManager: SharedPreferences
 ) : Interceptor {
 

@@ -1,23 +1,14 @@
 package com.sagrishin.ptsadm.common.api
 
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Response
-import java.lang.Exception
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeUnit
 
 const val REASON_MESSAGE_HEADER_NAME = "Reason-Message"
 
-fun <T> Observable<Response<T>>.getResponseBody(): Observable<T> {
-    return flatMap {
-        if (it.isSuccessful && (it.body() != null) && (it.errorBody() == null)) {
-            Observable.create<T> { e -> e.onNext(it.body()!!) }
-        } else {
-            Observable.create<T> { e -> e.onError(Exception(it.headers()[REASON_MESSAGE_HEADER_NAME])) }
-        }
-    }
-}
 
 fun <T> Single<Response<T>>.getResponseBody(): Single<T> {
     return flatMap {
@@ -29,10 +20,18 @@ fun <T> Single<Response<T>>.getResponseBody(): Single<T> {
     }
 }
 
-fun <T> Observable<Response<T>>.callInBackgroundAndProvideInUi(): Observable<Response<T>> {
-    return subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-}
 
 fun <T> Single<Response<T>>.callInBackgroundAndProvideInUi(): Single<Response<T>> {
     return subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+}
+
+
+fun <T> callSingle(apiCall: () -> Single<Response<T>>): Single<T> {
+    return apiCall().callInBackgroundAndProvideInUi().getResponseBody()
+}
+
+
+fun <T> Single<T>.retrySingleCall(timeout: Long = 60, retryCount: Int = 3): Single<T> {
+    return timeout(timeout, TimeUnit.SECONDS)
+        .retry { count, error -> (error is SocketTimeoutException) && (count <= retryCount) }
 }

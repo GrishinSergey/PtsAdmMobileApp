@@ -2,6 +2,7 @@ package com.sagrishin.ptsadm.common
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
+import android.graphics.RectF
 import android.view.View
 import android.view.animation.*
 import android.widget.ProgressBar
@@ -146,4 +147,33 @@ fun View.animateClick(durationInMillis: Long, size: ClickSize, callback: (() -> 
 
         startAnimation(this)
     }
+}
+
+
+fun View.animateBounce(
+    durationInMillis: Long,
+    rectF: RectF,
+    startOffset: Long,
+    fillAfter: Boolean,
+    repeatCount: Int
+) {
+    startAnimation(TranslateAnimation(rectF.left, rectF.right, rectF.top, rectF.bottom).apply {
+        this.startOffset = startOffset
+        this.duration = durationInMillis
+        this.fillAfter = fillAfter
+        this.interpolator = BounceInterpolator()
+        this.repeatCount = repeatCount
+    })
+}
+
+
+fun View.animateBounceVertical(
+    durationInMillis: Long,
+    from: Float,
+    to: Float,
+    startOffset: Long,
+    fillAfter: Boolean,
+    repeatCount: Int
+) {
+    animateBounce(durationInMillis, RectF(0F, 0F, from, to), startOffset, fillAfter, repeatCount)
 }

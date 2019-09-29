@@ -1,17 +1,13 @@
 package com.sagrishin.ptsadm.di
 
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonPrimitive
-import com.google.gson.JsonSerializer
+import com.sagrishin.ptsadm.common.api.interceptors.ErrorInterceptor
 import com.sagrishin.ptsadm.common.api.interceptors.TokenInterceptor
 import com.sagrishin.ptsadm.common.api.serializers.DateTimeAdapter
 import com.sagrishin.ptsadm.common.api.serializers.LocalDateTimeAdapter
-import com.snakydesign.watchtower.interceptor.WatchTowerInterceptor
 import okhttp3.OkHttpClient
 import org.joda.time.DateTime
 import org.joda.time.LocalDateTime
-import org.joda.time.format.ISODateTimeFormat
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -21,19 +17,20 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 val apiModule = module {
 
     single {
-        Retrofit.Builder().baseUrl("https://ptsadmapp.herokuapp.com/")
-            .client(get())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(get()))
-            .build()
+        Retrofit.Builder().apply {
+            baseUrl("https://ptsadmapp.herokuapp.com/")
+            client(get())
+            addConverterFactory(ScalarsConverterFactory.create())
+            addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            addConverterFactory(GsonConverterFactory.create(get()))
+        }.build()
     }
 
     single {
-        OkHttpClient.Builder()
-            .addInterceptor(TokenInterceptor(get()))
-            .addInterceptor(WatchTowerInterceptor())
-            .build()
+        OkHttpClient.Builder().apply {
+            addInterceptor(TokenInterceptor(get()))
+            addInterceptor(ErrorInterceptor(get()))
+        }.build()
     }
 
     single {

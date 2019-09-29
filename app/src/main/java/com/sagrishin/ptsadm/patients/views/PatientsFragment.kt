@@ -1,27 +1,27 @@
 package com.sagrishin.ptsadm.patients.views
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.sagrishin.ptsadm.MainActivity
 import com.sagrishin.ptsadm.R
-import com.sagrishin.ptsadm.appointments.views.PatientAppointmentsLogDialog
 import com.sagrishin.ptsadm.common.adapter.BaseRecyclerAdapter
 import com.sagrishin.ptsadm.common.addOnBackPressedCallback
 import com.sagrishin.ptsadm.common.livedata.observe
 import com.sagrishin.ptsadm.common.uikit.alertdialog.alert
+import com.sagrishin.ptsadm.common.uikit.onScrolled
 import com.sagrishin.ptsadm.patients.UiPatient
 import com.sagrishin.ptsadm.patients.holders.PatientHolder
 import com.sagrishin.ptsadm.patients.viewmodels.PatientsViewModel
+import com.sagrishin.ptsadm.patients.views.PatientsFragmentDirections.Companion.actionPatientsToPatientAppointmentsLogDialog
 import kotlinx.android.synthetic.main.fragment_patients.*
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PatientsFragment : Fragment() {
+class PatientsFragment : Fragment(R.layout.fragment_patients) {
 
-    private val patientsViewModel: PatientsViewModel by inject()
+    private val patientsViewModel: PatientsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +37,18 @@ class PatientsFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_patients, container, false)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        patientsViewModel.shownPatientsLiveData.observe(viewLifecycleOwner) {
+            if (patients.adapter == null) {
+                patients.adapter = BaseRecyclerAdapter(it.toMutableList(), this::onPatientClickListener).apply {
+                    this += PatientHolder.getHolderDefinition(::onDeletePatient)
+                }
+            } else {
+                (patients.adapter as BaseRecyclerAdapter<UiPatient>).setItems(it)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, state: Bundle?) {
@@ -56,37 +66,23 @@ class PatientsFragment : Fragment() {
         }
 
         /**
-         * For now this part is not used. New patients can be added only from phone's contacts book
+         * For now this part is not used. New patients can be added only from phone's contacts book or web ui
          */
-//        fab.setOnClickListener {
-//
-//        }
-//
-//        patients.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                if ((dy > 0) && (fab.visibility == View.VISIBLE)) {
-//                    fab.hide()
-//                } else {
-//                    fab.show()
-//                }
-//            }
-//        })
+        fab.setOnClickListener {
 
-        patientsViewModel.shownPatientsLiveData.observe(this) {
-            if (patients.adapter == null) {
-                patients.adapter = BaseRecyclerAdapter(it.toMutableList(), this::onPatientClickListener).apply {
-                    this += PatientHolder.getHolderDefinition(::onDeletePatient)
-                }
+        }
+
+        patients.onScrolled { _, dy ->
+            if ((dy > 0) && fab.isVisible) {
+                fab.hide()
             } else {
-                (patients.adapter as BaseRecyclerAdapter<UiPatient>).setItems(it)
+                fab.show()
             }
         }
     }
 
     private fun onPatientClickListener(patient: UiPatient) {
-        PatientAppointmentsLogDialog.newInstance(patient.id).apply {
-            this.show(this@PatientsFragment.childFragmentManager, "PatientAppointmentsLogDialog")
-        }
+        (activity as MainActivity).navigateTo(actionPatientsToPatientAppointmentsLogDialog(patient.id))
     }
 
     private fun onDeletePatient(patient: UiPatient) {
