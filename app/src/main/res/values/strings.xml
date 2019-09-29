@@ -19,11 +19,17 @@
         <item quantity="other">%1$d events</item>
     </plurals>
 
+    <string name="error_token_expired">Session expired. Re login, please</string>
+
     <string name="enter_email">Enter email</string>
     <string name="enter_password">Enter password</string>
     <string name="login">Login</string>
     <string name="not_have_an_account">Not have an account?</string>
     <string name="register">Register</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="error_login_required">Login is required field</string>
+    <string name="error_password_required">Password is required field</string>
 
     <string name="new_appointment_title">New appointment</string>
     <string name="new_appointment_patient_data_hint">Start typing phone number or name</string>
@@ -50,5 +56,4 @@
 
     <string name="appointments_log">Appointments log</string>
     <string name="no_appointments_text">No appointments found for this patient</string>
-
 </resources>

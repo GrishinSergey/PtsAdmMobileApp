@@ -2,19 +2,19 @@ package com.sagrishin.ptsadm.patients.repositories.impl
 
 import android.content.Context
 import com.sagrishin.ptsadm.common.api.ApiPatient
-import com.sagrishin.ptsadm.common.api.BaseRepository
+import com.sagrishin.ptsadm.common.api.callSingle
 import com.sagrishin.ptsadm.patients.repositories.PatientsApiService
 import com.sagrishin.ptsadm.patients.repositories.PatientsRepository
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import ir.mirrajabi.rxcontacts.RxContacts
 
 class PatientsRepositoryImpl(
     private val patientsApiService: PatientsApiService,
     private val context: Context
-) : BaseRepository(), PatientsRepository {
+) : PatientsRepository {
 
     override fun getAll(): Single<List<ApiPatient>> {
         return callSingle { patientsApiService.getAllByCurrentDoctor() }
@@ -24,8 +24,10 @@ class PatientsRepositoryImpl(
         return callSingle { patientsApiService.save(apiPatient) }
     }
 
-    override fun deleteBy(id: Long): Single<Boolean> {
-        return callSingle { patientsApiService.deleteBy(id) }
+    override fun deleteBy(id: Long): Completable {
+        return callSingle { patientsApiService.deleteBy(id) }.flatMapCompletable {
+            if (it) Completable.complete() else Completable.error(Throwable(""))
+        }
     }
 
     override fun getLocalPatientsFromPhoneBook(): Single<List<ApiPatient>> {

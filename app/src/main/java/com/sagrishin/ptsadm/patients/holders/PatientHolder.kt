@@ -12,13 +12,9 @@ class PatientHolder(v: View) : BaseHolder<UiPatient>(v) {
 
     companion object {
         fun getHolderDefinition(onDeletePatient: ((UiPatient) -> Unit)? = null): HolderDefinition<UiPatient> {
-            return holder {
-                viewType = 1
-                predicate = { true }
-                generator = {
-                    PatientHolder(it.inflate(R.layout.item_patient)).apply {
-                        this.onDeletePatient = onDeletePatient
-                    }
+            return holder1 {
+                PatientHolder(it.inflate(R.layout.item_patient)).apply {
+                    this.onDeletePatient = onDeletePatient
                 }
             }
         }

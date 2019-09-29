@@ -35,5 +35,27 @@
         android:id="@+id/patients"
         android:name="com.sagrishin.ptsadm.patients.views.PatientsFragment"
         android:label="month"
-        tools:layout="@layout/fragment_patients" />
+        tools:layout="@layout/fragment_patients" >
+
+        <action
+            android:id="@+id/action_patients_to_patientAppointmentsLogDialog"
+            app:destination="@id/patientAppointmentsLogDialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/selectPatientsDialog"
+        android:name="com.sagrishin.ptsadm.patients.views.SelectPatientsDialog"
+        android:label="SelectPatientsDialog"
+        tools:layout="@layout/dialog_select_patients" />
+
+    <dialog
+        android:id="@+id/patientAppointmentsLogDialog"
+        android:name="com.sagrishin.ptsadm.appointments.views.PatientAppointmentsLogDialog"
+        android:label="PatientAppointmentsLogDialog"
+        tools:layout="@layout/dialog_patient_appointments_log" >
+
+        <argument
+            android:name="patientId"
+            app:argType="long" />
+    </dialog>
 </navigation>

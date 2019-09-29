@@ -8,7 +8,7 @@ import com.sagrishin.ptsadm.R
 import com.sagrishin.ptsadm.common.*
 import com.sagrishin.ptsadm.common.adapter.BaseHolder
 import com.sagrishin.ptsadm.common.adapter.BaseRecyclerAdapter
-import com.sagrishin.ptsadm.common.adapter.holder
+import com.sagrishin.ptsadm.common.adapter.holder1
 import com.sagrishin.ptsadm.common.adapter.inflate
 import kotlinx.android.synthetic.main.view_collapsing_calendar.view.*
 import kotlinx.android.synthetic.main.view_one_calendar_line.view.*
@@ -52,7 +52,7 @@ class CollapsingCalendarView @JvmOverloads constructor(
         val lastDayOfMonth = dayInMonth.lastDayOfMonth
         val lastDayOfMonthNumberInWeek = lastDayOfMonth.dayOfWeek
         val lastDayOfMonthNumberInMonth = lastDayOfMonth.dayOfMonth
-        val prevMonthPart = (1..(firstDayOfMonthNumberInWeek - 1)).map { "" }
+        val prevMonthPart = (1 until firstDayOfMonthNumberInWeek).map { "" }
         val nextMonthPart = (1..(7 - lastDayOfMonthNumberInWeek)).map { "" }
 
         selectedDay = dayInMonth
@@ -70,11 +70,7 @@ class CollapsingCalendarView @JvmOverloads constructor(
         initVisibleLine(visibleDays)
         val daysByWeeks = daysOfMonth.withIndex().groupBy { it.index / 7 }.map { it.value.map { it.value } }
         daysContainer.adapter = BaseRecyclerAdapter(daysByWeeks.toMutableList()).apply {
-            this += holder {
-                viewType = 100
-                predicate = { true }
-                generator = { MonthsDaysLine(it.inflate(R.layout.view_one_calendar_line)) }
-            }
+            this += holder1 { MonthsDaysLine(it.inflate(R.layout.view_one_calendar_line)) }
         }
         calendarEvents.find { it.day.dayOfMonth.toString() == selectedDayName }?.let {
             onDaySelectListener?.invoke(it)
