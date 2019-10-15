@@ -1,7 +1,9 @@
 package com.sagrishin.ptsadm.common.uikit.calendar
 
+import androidx.core.util.toRange
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import kotlin.math.min
 
 internal inline fun <R> ClosedRange<DateTime>.mapDateTimes(
     step: DateTime.() -> DateTime = { this.plusDays(1) },
@@ -29,4 +31,16 @@ internal inline fun <R> ClosedRange<LocalDate>.mapLocalDates(
     }
 
     return res
+}
+
+
+inline fun <reified T> List<T>.fillWithSized(value: T, newSize: Int): List<T> {
+    val fixedSizeList = Array(newSize) { value }
+    for (i in 0 until min(newSize, size)) fixedSizeList[i] = this[i]
+    return listOf(*fixedSizeList)
+}
+
+
+fun IntRange.fillWithSized(value: Int, newSize: Int): List<Int> {
+    return (start..endInclusive).toList().fillWithSized(value, newSize)
 }

@@ -41,10 +41,40 @@ open class BaseRecyclerAdapter<T>(
     }
 
 
+    fun clear() {
+        items.clear()
+        notifyDataSetChanged()
+    }
+
     fun setItems(newItems: List<T>) {
         items.clear()
         items += newItems
         notifyDataSetChanged()
+    }
+
+    operator fun get(position: Int): T {
+        return items[position]
+    }
+
+    operator fun set(position: Int, newItem: T) {
+        items[position] = newItem
+        notifyItemChanged(position)
+    }
+
+    fun addItem(newItem: T): Int {
+        items += newItem
+        notifyItemInserted(items.lastIndex)
+        return items.lastIndex
+    }
+
+    fun addItem(position: Int, newItem: T) {
+        items.add(position, newItem)
+        notifyItemInserted(position)
+    }
+
+    fun changeItem(position: Int, newItem: T) {
+        items[position] = newItem
+        notifyItemChanged(position)
     }
 
     operator fun plusAssign(newItems: List<T>) {
@@ -54,20 +84,22 @@ open class BaseRecyclerAdapter<T>(
     operator fun plusAssign(newItem: T) {
         items += newItem
         notifyItemInserted(items.lastIndex)
+        if (items.lastIndex != 0) {
+            notifyItemChanged(items.lastIndex - 1)
+        }
     }
 
     operator fun minusAssign(itemToRemove: T) {
-        items.forEachIndexed { i, item ->
-            if (item == itemToRemove) {
-                removeAt(i)
-                return@forEachIndexed
-            }
-        }
+        val indexOf = items.indexOf(itemToRemove)
+        removeAt(indexOf)
     }
 
     infix fun removeAt(position: Int) {
         items.removeAt(position)
         notifyItemRemoved(position)
+        if (items.lastIndex != 0) {
+            notifyItemChanged(position)
+        }
     }
 
 
@@ -75,9 +107,15 @@ open class BaseRecyclerAdapter<T>(
         addHolder(hd.viewType, hd.predicate, hd.generator)
     }
 
-    fun addHolder(viewType: Int, predicate: HolderPredicate<T>, generator: HolderGenerator<T>): BaseRecyclerAdapter<T> {
-        viewTypes[predicate] = viewType
-        holderGenerators[viewType] = generator
+    fun addHolder(vt: Int, hp: HolderPredicate<T>, hg: HolderGenerator<T>): BaseRecyclerAdapter<T> {
+        viewTypes[hp] = vt
+        holderGenerators[vt] = hg
+        return this
+    }
+
+    fun addHolder(hd: HolderDefinition<T>): BaseRecyclerAdapter<T> {
+        viewTypes[hd.predicate] = hd.viewType
+        holderGenerators[hd.viewType] = hd.generator
         return this
     }
 
@@ -113,7 +151,7 @@ fun <T> holder(block: HolderDefinition<T>.() -> Unit): HolderDefinition<T> {
 
 fun <T> holder1(generator: HolderGenerator<T>): HolderDefinition<T> {
     return holder {
-        this.viewType = -1
+        this.viewType = 0
         this.predicate = { true }
         this.generator = generator
     }

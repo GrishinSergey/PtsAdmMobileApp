@@ -174,8 +174,8 @@ class AppointmentsCalendarFragment : Fragment(R.layout.fragment_appointments_cal
         alert {
             titleId = R.string.delete_appointment_dialog_title
             messageId = R.string.delete_appointment_dialog_message
-            negativeButtonId = R.string.no to { d -> d.cancel() }
-            positiveButtonId = R.string.yes to { d ->
+            negativeButton = R.string.no to { d -> d.cancel() }
+            positiveButton = R.string.yes to { d ->
                 val appointmentDate = selectedDate.plusHours(dateTime.hourOfDay).plusMinutes(dateTime.minuteOfHour)
                 appointmentsViewModel.deleteAppointmentBy(id, appointmentDate)
             }
@@ -186,7 +186,7 @@ class AppointmentsCalendarFragment : Fragment(R.layout.fragment_appointments_cal
         alert {
             titleId = R.string.call_to_patient_dialog_title
             message = context!!.getString(R.string.call_dialog_message, patient.name, patient.phoneNumber)
-            positiveButtonId = R.string.yes to { d ->
+            positiveButton = R.string.yes to { d ->
                 startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${patient.phoneNumber}")))
             }
         }

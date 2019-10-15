@@ -45,7 +45,7 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
             alert {
                 title = getString(R.string.offline_dialog_title)
                 message = getString(R.string.check_internet_dialog_message)
-                positiveButtonId = R.string.retry to { d ->
+                positiveButton = R.string.retry to { d ->
                     d.dismiss()
                     callUpdateToken()
                 }

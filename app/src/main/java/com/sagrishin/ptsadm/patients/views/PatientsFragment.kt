@@ -89,8 +89,8 @@ class PatientsFragment : Fragment(R.layout.fragment_patients) {
         alert {
             title = getString(R.string.delete_patient_dialog_title)
             message = getString(R.string.delete_patient_dialog_message, patient.name)
-            negativeButtonId = R.string.no to { d -> d.dismiss() }
-            positiveButtonId = R.string.yes to { d -> patientsViewModel.deletePatient(patient) }
+            negativeButton = R.string.no to { d -> d.dismiss() }
+            positiveButton = R.string.yes to { d -> patientsViewModel.deletePatient(patient) }
         }
     }
 

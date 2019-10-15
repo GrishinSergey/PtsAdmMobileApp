@@ -61,7 +61,14 @@ class CollapsingCalendarView @JvmOverloads constructor(
         visibleDays = if (!dayInMonth.isCurrentMonth()) {
             daysOfMonth.subList(0, 7)
         } else {
-            (dayInMonth.firstDayOfWeek.dayOfMonth..dayInMonth.lastDayOfWeek.dayOfMonth).map { it.toString() }
+            if (dayInMonth.firstDayOfWeek.monthOfYear != dayInMonth.lastDayOfWeek.monthOfYear) {
+                (dayInMonth.firstDayOfWeek.dayOfMonth..dayInMonth.lastDayOfMonth.dayOfMonth)
+                    .toList()
+                    .fillWithSized(0, 7)
+                    .map { if (it == 0) "" else it.toString() }
+            } else {
+                (dayInMonth.firstDayOfWeek.dayOfMonth..dayInMonth.lastDayOfWeek.dayOfMonth).map { it.toString() }
+            }
         }
         onCalendarEventsSet()
     }
