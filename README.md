@@ -23,9 +23,9 @@ In second tab there're list of already exists patients and feature of adding new
 
 
 From 29/09/2019 What features still not finished:
-1) adding new patients from second tab in app by pressing fab. Need to make layout and full logic chat from ui to api layer.
-2) maybe improve calendar: when user selected custom date (which is not on current week) and collapse the calendar, should be shown week with selected date.
-3) speed improvements: whe user select prev or next month now it executes really slow, need to check, why it so slowly executes and fix this issue.
-4) there is small bug, when user deleted patient from schedule and tap again on this cell, "call to this user" dialog will be shown.
-5) Finish chain of registration. For now api call and ui are ready, need to tie them both, add viewmodel, usecase's logic and handle errors.
-6) As small improvement: add feature "restore password", because for now it's impossible to restore password, only create new user or restore it in database in server manually
+1) adding new patients from second tab in app by pressing fab. Need to make layout and full logic from ui to api layer;
+2) maybe improve calendar: when user selected custom date (which is not on current week) and collapses the calendar, should be shown week with selected date;
+3) speed improvements: when user selects prev or next month, now it's executing really slow, need to check, why it so slowly and fix this issue;
+4) there is small bug, when user deleted patient from schedule and taping again on this cell, "call to this user" dialog will be shown;
+5) finish registration. For now api call and ui are ready, need to tie them both, add viewmodel, usecase's logic and handle errors;
+6) as small improvement: add feature "restore password", because for now it's impossible to restore password, only manual restoring in database on server.
